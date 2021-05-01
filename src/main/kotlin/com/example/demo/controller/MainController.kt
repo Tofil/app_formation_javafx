@@ -2,6 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.app.Styles
 import com.example.demo.model.*
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import tornadofx.Controller
 import tornadofx.SortedFilteredList
@@ -13,6 +14,8 @@ class MainController : Controller() {
     val formations = FXCollections.observableArrayList<Formation>()
     val etudiants = FXCollections.observableArrayList<Etudiant>()
     val ueSuivis = FXCollections.observableArrayList<UESuivi>()
+    val roles = FXCollections.observableArrayList( "Directeurs d’Etude","Secrétariat Pédagogique", "Bureau Des Examens")
+    var selectedRole = SimpleStringProperty()
 
     fun initFromPath() {
         //TODO: ImportCSV
