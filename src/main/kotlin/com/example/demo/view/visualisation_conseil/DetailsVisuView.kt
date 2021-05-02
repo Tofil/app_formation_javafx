@@ -61,7 +61,7 @@ class DetailsVisuView : View("Visualisation et conseil") {
                                     textfield(filterMention).setOnAction { ueSuivisPrereq.refilter() }
                                 }
                                 field("Filtrer par parcours") {
-                                    textfield(filterParcours).setOnAction  { ueSuivisPrereq.refilter() }
+                                    textfield(filterParcours).setOnAction { ueSuivisPrereq.refilter() }
                                 }
                             }
                         }
@@ -89,17 +89,18 @@ class DetailsVisuView : View("Visualisation et conseil") {
             etuCtrl.selectedEtu == it.etu && it.enCour == "Oui"
         }
         ueSuivisPrereq.predicate = { ue ->
-            val ueSuivi = ctrl.ueSuivis.find { ueSuivi ->
-                ueSuivi.ue == ue
-            }
-            ueSuivi != null &&
-                    etuCtrl.selectedEtu == ueSuivi.etu && (
-                    ue.formation == null ||
-                            (ue.formation != null
-                                    &&
+            val uesEtu = ctrl.ueSuivis.filter { ueSuivi ->
+                etuCtrl.selectedEtu == ueSuivi.etu
+            }.map{ueSuivi->ueSuivi.ue}
+
+            val uesEtuPreq = ctrl.ues.filter { ue-> ue.listeUePrereq!=null && ue.listeUePrereq.any(uesEtu::contains)}
+            uesEtuPreq.contains(ue) &&
+            (
+                    ue.formation == null || (
+                            ue.formation != null &&
                                     (ue.formation.mention.contains(filterMention.value)) &&
                                     (ue.formation.parcours.contains(filterParcours.value))
-                                    )
+                            )
                     )
 
         }

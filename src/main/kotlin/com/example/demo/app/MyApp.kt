@@ -1,7 +1,6 @@
 package com.example.demo.app
 
 import com.example.demo.model.Formation
-import com.example.demo.model.Mention
 import com.example.demo.model.UE
 import com.example.demo.view.MainView
 import com.example.demo.view.StartPopup

@@ -4,13 +4,14 @@ import com.example.demo.app.Styles
 import com.example.demo.model.*
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import tornadofx.Controller
 import tornadofx.SortedFilteredList
 import tornadofx.importStylesheet
+import tornadofx.observableList
 
 class MainController : Controller() {
     val ues = FXCollections.observableArrayList<UE>()
-    val mentions = FXCollections.observableArrayList<Mention>()
     val formations = FXCollections.observableArrayList<Formation>()
     val etudiants = FXCollections.observableArrayList<Etudiant>()
     val ueSuivis = FXCollections.observableArrayList<UESuivi>()
@@ -33,7 +34,10 @@ class MainController : Controller() {
             UE("UE24352", 6,formations[1]),
             UE("UE13572", 8)
         )
-
+        ues.addAll(
+            UE("UE243252", 6,formations[1], FXCollections.observableArrayList(ues[0])),
+            UE("UE244352", 6,formations[0], FXCollections.observableArrayList(ues[1]))
+        )
         etudiants.addAll(
             Etudiant("A1Z972", "ValJean", "Jean", formations[0]),
             Etudiant("A7S987F", "Orliac", "Théophile", formations[0]),
