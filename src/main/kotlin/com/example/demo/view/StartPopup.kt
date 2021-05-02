@@ -9,19 +9,14 @@ import tornadofx.*
 class StartPopup : View("App Formation") {
     val ctrl: MainController by inject()
 
-
     override val root = borderpane {
-        prefHeight = 150.0;
-        prefWidth = 300.0;
+        prefHeight = 150.0
+        prefWidth = 300.0
         center {
            form{
                fieldset {
                    field  ("Chemin Actuel"){
                        label("C:\\Users\\test\\app_formation")
-                   }
-                   button("Changer") {
-                       setOnAction {
-                       }
                    }
                    field ("Choisir un rôle") {
                        combobox(ctrl.selectedRole, ctrl.roles) {
@@ -36,7 +31,6 @@ class StartPopup : View("App Formation") {
                                this@StartPopup.replaceWith(ListeInscriptionView::class)
                            if (ctrl.selectedRole.value == "Bureau Des Examens")
                                this@StartPopup.replaceWith(ListeSaisieResView::class)
-
                        }
                    }
                }

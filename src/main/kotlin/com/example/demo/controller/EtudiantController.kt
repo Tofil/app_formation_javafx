@@ -9,7 +9,7 @@ import tornadofx.importStylesheet
 
 class EtudiantController : Controller() {
     val mainCtrl: MainController by inject()
-    var selectedEtu: Etudiant = Etudiant("", "", "", Formation(Mention(""), ""))
+    var selectedEtu: Etudiant = Etudiant("", "", "", Formation("", ""))
 
 
 

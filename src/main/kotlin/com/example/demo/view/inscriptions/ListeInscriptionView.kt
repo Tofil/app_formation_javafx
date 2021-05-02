@@ -18,7 +18,7 @@ class ListeInscriptionView : View("Inscription") {
 
                 onUserSelect(clickCount = 1) { it ->
                     etuCtrl.selectedEtu = it
-                    DetailsSaisieResView().openWindow()
+                    //DetailsSaisieResView().openWindow()
 
                 }
             }

@@ -18,7 +18,7 @@ class ListeVisuView : View("Visualisation et conseil") {
 
                 onUserSelect(clickCount = 1) { it ->
                     etuCtrl.selectedEtu = it
-                    DetailsSaisieResView().openWindow()
+                    DetailsVisuView().openWindow()
 
                 }
             }

@@ -18,7 +18,7 @@ class ListeSaisieResView : View("Saisie des résultats") {
 
                 onUserSelect(clickCount = 1) { it ->
                     etuCtrl.selectedEtu = it
-                    DetailsSaisieResView().openWindow()
+                    //DetailsSaisieResView().openWindow()
 
                 }
             }
