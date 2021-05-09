@@ -16,7 +16,12 @@ class StartPopup : View("App Formation") {
            form{
                fieldset {
                    field  ("Chemin Actuel"){
-                       label("C:\\Users\\test\\app_formation")
+                       label(ctrl.folderPath)
+                   }
+                   button("Changer") {
+                       setOnAction {
+                           ctrl.setFolderPath()
+                       }
                    }
                    field ("Choisir un rôle") {
                        combobox(ctrl.selectedRole, ctrl.roles) {

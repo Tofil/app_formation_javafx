@@ -1,5 +1,6 @@
 package com.example.demo.view.visualisation_conseil
 
+import com.example.demo.controller.CSVController
 import com.example.demo.controller.EtudiantController
 import com.example.demo.controller.MainController
 import com.example.demo.model.UE
@@ -10,6 +11,7 @@ import tornadofx.*
 class DetailsVisuView : View("Visualisation et conseil") {
     val ctrl: MainController by inject()
     val etuCtrl: EtudiantController by inject()
+    val  csvController: CSVController by inject()
 
     val ueSuivisValide = SortedFilteredList(ctrl.ueSuivis)
     val ueSuivisEnCour = SortedFilteredList(ctrl.ueSuivis)
@@ -30,7 +32,11 @@ class DetailsVisuView : View("Visualisation et conseil") {
                 label(etuCtrl.selectedEtu.formation.mention)
                 label("Parcours :")
                 label(etuCtrl.selectedEtu.formation.parcours)
-
+                button("Save") {
+                    setOnAction {
+                        csvController.csvWriter()
+                    }
+                }
                 minWidth = 100.0
                 paddingLeft = 20
             }

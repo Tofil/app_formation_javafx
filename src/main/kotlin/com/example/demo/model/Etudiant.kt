@@ -9,7 +9,7 @@ import tornadofx.SortedFilteredList
 import tornadofx.getValue
 import tornadofx.setValue
 
-class Etudiant (numero:String, nom: String, prenom: String, formation: Formation){
+class Etudiant (numero:String, nom: String, prenom: String, formation: Formation?){
     val numeroProperty = SimpleStringProperty(numero)
     var numero by numeroProperty
 

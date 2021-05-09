@@ -9,11 +9,4 @@ import tornadofx.*
 class EtudiantController : Controller() {
     val mainCtrl: MainController by inject()
     var selectedEtu = Etudiant("", "", "", Formation("", ""))
-
-
-
-
-
-
-
 }

@@ -1,28 +1,33 @@
 package com.example.demo.controller
 
-import com.example.demo.app.Styles
-import com.example.demo.model.*
+import com.example.demo.model.Etudiant
+import com.example.demo.model.Formation
+import com.example.demo.model.UE
+import com.example.demo.model.UESuivi
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import tornadofx.Controller
-import tornadofx.SortedFilteredList
-import tornadofx.importStylesheet
-import tornadofx.observableList
+import tornadofx.chooseDirectory
+import java.util.prefs.Preferences
+
 
 class MainController : Controller() {
     val ues = FXCollections.observableArrayList<UE>()
     val formations = FXCollections.observableArrayList<Formation>()
     val etudiants = FXCollections.observableArrayList<Etudiant>()
     val ueSuivis = FXCollections.observableArrayList<UESuivi>()
-
+    val pref = Preferences.userRoot().node(javaClass.name) //Preferance utilisateur (chemin dossier)
     var selectedRole = SimpleStringProperty("Directeurs d’Etude")
     val roles = FXCollections.observableArrayList( "Directeurs d’Etude","Secrétariat Pédagogique", "Bureau Des Examens")
+    var folderPath = SimpleStringProperty(pref.get("App_Formation_folderPath", "Default_Path"))
+
+    val csvHelper = CSVController()
 
     fun initFromPath() {
         //TODO: ImportCSV
-
-
+        csvHelper.csvReader()
+        pref.put("App_Formation_folderPath", folderPath.value)
+        /*
         formations.addAll(
             Formation("MIASH", "MIAGE"),
             Formation("MIAGE", "MDS")
@@ -48,11 +53,12 @@ class MainController : Controller() {
             UESuivi(ues[0],etudiants[0], "2020", "Oui", "Oui", "Non"),
             UESuivi(ues[1],etudiants[0], "2021", "Non", "Oui", "Oui"),
             UESuivi(ues[1],etudiants[1], "2021", "Oui", "Non", "Non")
-        )
-
-
-
-
+        )*/
     }
+
+    fun setFolderPath(){
+        folderPath.value = chooseDirectory("Select Target Directory")?.absolutePath
+    }
+
 
 }
