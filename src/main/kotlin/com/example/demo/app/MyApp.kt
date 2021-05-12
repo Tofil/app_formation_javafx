@@ -1,15 +1,17 @@
 package com.example.demo.app
 
-import com.example.demo.model.Formation
-import com.example.demo.model.UE
-import com.example.demo.view.MainView
 import com.example.demo.view.StartPopup
+import javafx.stage.Stage
+import jfxtras.styles.jmetro.JMetro
+import jfxtras.styles.jmetro.Style
 import tornadofx.App
-import tornadofx.importStylesheet
 
 class MyApp: App(){
     override var primaryView = StartPopup::class
 
-    init {
+    override fun start(stage: Stage) {
+        super.start(stage)
+        var jMetro = JMetro(Style.LIGHT)
+        jMetro.scene = stage.scene
     }
 }
