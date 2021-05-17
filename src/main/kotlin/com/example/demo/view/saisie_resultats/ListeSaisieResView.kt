@@ -15,7 +15,6 @@ class ListeSaisieResView : View("Saisie des résultats") {
                 readonlyColumn("Nom", Etudiant::nom)
                 readonlyColumn("Prenom", Etudiant::prenom)
 
-
                 onUserSelect(clickCount = 1) { it ->
                     etuCtrl.selectedEtu = it
                     //DetailsSaisieResView().openWindow()

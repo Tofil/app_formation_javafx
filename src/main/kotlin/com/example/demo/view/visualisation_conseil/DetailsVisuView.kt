@@ -6,19 +6,21 @@ import com.example.demo.controller.MainController
 import com.example.demo.model.UE
 import com.example.demo.model.UESuivi
 import javafx.beans.property.SimpleStringProperty
+import jfxtras.styles.jmetro.JMetro
+import jfxtras.styles.jmetro.Style
 import tornadofx.*
 
 class DetailsVisuView : View("Visualisation et conseil") {
-    val ctrl: MainController by inject()
-    val etuCtrl: EtudiantController by inject()
-    val  csvController: CSVController by inject()
+    private val ctrl: MainController by inject()
+    private val etuCtrl: EtudiantController by inject()
+    private val  csvController: CSVController by inject()
 
-    val ueSuivisValide = SortedFilteredList(ctrl.ueSuivis)
-    val ueSuivisEnCour = SortedFilteredList(ctrl.ueSuivis)
-    val ueSuivisPrereq = SortedFilteredList(ctrl.ues)
+    private val ueSuivisValide = SortedFilteredList(ctrl.ueSuivis)
+    private val ueSuivisEnCour = SortedFilteredList(ctrl.ueSuivis)
+    private val ueSuivisPrereq = SortedFilteredList(ctrl.ues)
 
-    var filterMention = SimpleStringProperty("")
-    var filterParcours = SimpleStringProperty("")
+    private var filterMention = SimpleStringProperty("")
+    private var filterParcours = SimpleStringProperty("")
 
 
     override val root = borderpane {
@@ -45,7 +47,7 @@ class DetailsVisuView : View("Visualisation et conseil") {
             tabpane {
                 tab("UE Validées") {
                     tableview(ueSuivisValide) {
-                        column<UESuivi, String>("Code UE", { it.value.ueProperty.value.codeProperty })
+                        column<UESuivi, String>("Code UE") { it.value.ueProperty.value.codeProperty }
                         column("UE Validée", UESuivi::valide)
                         column("Année", UESuivi::annee)
                         column("Semestre Pair", UESuivi::semestrePair)
@@ -53,7 +55,7 @@ class DetailsVisuView : View("Visualisation et conseil") {
                 }
                 tab("UE Suivies") {
                     tableview(ueSuivisEnCour) {
-                        column<UESuivi, String>("Code UE", { it.value.ueProperty.value.codeProperty })
+                        column<UESuivi, String>("Code UE") { it.value.ueProperty.value.codeProperty }
                         column("En Cour", UESuivi::enCour)
                         column("Année", UESuivi::annee)
                         column("Semestre Pair", UESuivi::semestrePair)
@@ -111,5 +113,9 @@ class DetailsVisuView : View("Visualisation et conseil") {
 
         }
     }
-
+    override fun onBeforeShow() {
+        super.onBeforeShow()
+        val jMetro = JMetro(Style.LIGHT)
+        if (currentStage != null) jMetro.scene = currentStage?.scene
+    }
 }
