@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty
 import tornadofx.getValue
 import tornadofx.setValue
 
-class UESuivi(ue:UE?, etu:Etudiant?, annee:String, valide:String, semestrePair:String, enCour:String) {
+class UESuivi(ue:UE?, etu:Etudiant?, annee:String, valide:Boolean, semestrePair:Boolean, enCour:Boolean) {
     val ueProperty = SimpleObjectProperty<UE>(ue)
     var ue by ueProperty
 
@@ -18,14 +18,14 @@ class UESuivi(ue:UE?, etu:Etudiant?, annee:String, valide:String, semestrePair:S
     val anneeProperty = SimpleStringProperty(annee)
     var annee by anneeProperty
 
-    val semestrePairProperty = SimpleStringProperty(semestrePair)
+    val semestrePairProperty = SimpleBooleanProperty(semestrePair)
     var semestrePair by semestrePairProperty
 
 
-    val valideProperty = SimpleStringProperty(valide)
+    val valideProperty = SimpleBooleanProperty(valide)
     var valide by valideProperty
 
-    val enCourProperty = SimpleStringProperty(enCour)
+    val enCourProperty = SimpleBooleanProperty(enCour)
     var enCour by enCourProperty
 
 }
