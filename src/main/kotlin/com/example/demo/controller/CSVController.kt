@@ -97,7 +97,7 @@ class CSVController : Controller() {
                     }
                     fileList[3] -> {
                         for (ueSuivi in mainCtrl.ueSuivis){
-                            rows.add(arrayListOf(ueSuivi.ue.code, ueSuivi.etu.numero, ueSuivi.annee, ueSuivi.valide, ueSuivi.semestrePair, ueSuivi.enCour))
+                            rows.add(arrayListOf(ueSuivi.ue.code, ueSuivi.etu.numero, ueSuivi.annee, ueSuivi.valide.toString(), ueSuivi.semestrePair.toString(), ueSuivi.enCour.toString()))
                         }
                     }
                 }
@@ -145,7 +145,13 @@ class CSVController : Controller() {
                     mainCtrl.etudiants.add(Etudiant(list[0], list[1], list[2], getFormation(list[3])))
                 }
                 fileList[3] -> {
-                    mainCtrl.ueSuivis.add(UESuivi(getUE(list[0]),getEtudiant(list[1]), list[2], list[3], list[4], list[5]))
+                    mainCtrl.ueSuivis.add(UESuivi(getUE(list[0]),
+                        getEtudiant(list[1]),
+                        list[2],
+                        list[3] == "true",
+                        list[4] == "true",
+                        list[5] == "true",
+                    ))
                 }
             }
         }

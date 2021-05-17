@@ -89,10 +89,10 @@ class DetailsVisuView : View("Visualisation et conseil") {
 
     init {
         ueSuivisValide.predicate = {
-            etuCtrl.selectedEtu == it.etu && it.valide == "Oui"
+            etuCtrl.selectedEtu == it.etu && it.valide
         }
         ueSuivisEnCour.predicate = {
-            etuCtrl.selectedEtu == it.etu && it.enCour == "Oui"
+            etuCtrl.selectedEtu == it.etu && it.enCour
         }
         ueSuivisPrereq.predicate = { ue ->
             val uesEtu = ctrl.ueSuivis.filter { ueSuivi ->
