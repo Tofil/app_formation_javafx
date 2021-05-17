@@ -1,0 +1,43 @@
+formations.addAll(
+            Formation("MIASH", "MIAGE"),
+            Formation("MIAGE", "MDS")
+        )
+
+        ues.addAll(
+            UE("UE27862", 3,formations[0]),
+            UE("UE89062", 2,formations[0]),
+            UE("UE24352", 6,formations[1]),
+            UE("UE13572", 8)
+        )
+
+        etudiants.addAll(
+            Etudiant("A1Z972", "ValJean", "Jean", formations[0]),
+            Etudiant("A7S987F", "Orliac", "Théophile", formations[0]),
+            Etudiant("68D5SQD", "Oliver", "John", formations[0])
+        )
+
+        ueSuivis.addAll(
+            UESuivi(ues[0],etudiants[0], "2020", "Oui", "Oui", "Non"),
+            UESuivi(ues[1],etudiants[0], "2021", "Non", "Oui", "Oui"),
+            UESuivi(ues[1],etudiants[1], "2021", "Oui", "Non", "Non")
+        )
+
+MIASH,MIAGE
+MIAGE,MDS
+
+UE27862,3,MIASHMIAGE
+UE89062,2,MIASHMIAGE
+UE24352,6,MIAGEMDS
+UE13572,8
+
+A1Z972,ValJean,Jean,MIASHMIAGE
+A7S987F,Orliac,Théophile,MIASHMIAGE
+68D5SQD,Oliver,John,MIAGEMDS
+
+
+UE27862,A1Z972,2020,Oui,Oui,Non
+UE89062,A7S987F,2021,Non,Oui,Oui
+UE24352,68D5SQD,2021,Oui,Non,Non
+
+
+
