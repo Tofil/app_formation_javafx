@@ -7,14 +7,14 @@ graph {
 
 node {
     text-size: 15px;
-    size: 20px;
+    size: 30px;
     fill-color: blue;
 }
 node.suivie {
     fill-color: blue;
 }
 node.valide {
-    fill-color: green;
+    fill-color: darkgreen;
 }
 node.possible {
     fill-color: white;
