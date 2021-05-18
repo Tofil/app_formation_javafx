@@ -1,12 +1,13 @@
 package com.example.demo.view.visualisation_conseil
 
-import com.example.demo.controller.CSVController
 import com.example.demo.controller.EtudiantController
 import com.example.demo.controller.MainController
 import com.example.demo.model.UE
 import com.example.demo.model.UESuivi
 import com.example.demo.view.graphs.GraphePrerequisView
 import javafx.beans.property.SimpleStringProperty
+import javafx.geometry.Pos
+import javafx.scene.image.Image
 import jfxtras.styles.jmetro.JMetro
 import jfxtras.styles.jmetro.Style
 import tornadofx.*
@@ -14,7 +15,6 @@ import tornadofx.*
 class DetailsVisuView : View("Visualisation et conseil") {
     private val ctrl: MainController by inject()
     private val etuCtrl: EtudiantController by inject()
-    private val csvController: CSVController by inject()
 
     private val ueSuivisValide = SortedFilteredList(ctrl.ueSuivis)
     private val ueSuivisEnCour = SortedFilteredList(ctrl.ueSuivis)
@@ -27,21 +27,22 @@ class DetailsVisuView : View("Visualisation et conseil") {
     override val root = borderpane {
         left {
             vbox {
-                label("Nom :")
-                label(etuCtrl.selectedEtu.nom)
-                label("Prenom :")
-                label(etuCtrl.selectedEtu.prenom)
-                label("Mention :")
-                label(etuCtrl.selectedEtu.formation.mention)
-                label("Parcours :")
-                label(etuCtrl.selectedEtu.formation.parcours)
-                button("Save") {
-                    setOnAction {
-                        csvController.csvWriter()
-                    }
+                imageview{
+                    image = Image("/images/user.png")
+                    alignment = Pos.TOP_CENTER
                 }
+                label("\nNom :\n" + "      " + etuCtrl.selectedEtu.nom)
+                label("Prenom :\n" + "      " + etuCtrl.selectedEtu.prenom)
+                label("Mention :\n" + "      " + etuCtrl.selectedEtu.formation.mention)
+                label("Parcours :\n" + "      " + etuCtrl.selectedEtu.formation.parcours)
                 minWidth = 100.0
                 paddingLeft = 20
+                paddingRight = 20
+                paddingTop = 20
+                children.style {
+                    fontSize = 14.px
+                    padding = box(5.px)
+                }
             }
         }
         center {

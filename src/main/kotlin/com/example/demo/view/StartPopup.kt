@@ -17,7 +17,8 @@ class StartPopup : View("App Formation") {
         top = hbox {
             imageview{
                 image = Image("/images/logo.png")
-            alignment = Pos.CENTER
+                alignment = Pos.CENTER
+                paddingTop = 10
             }
         }
         center {
@@ -52,7 +53,7 @@ class StartPopup : View("App Formation") {
     }
     override fun onDock() {
         primaryStage.width = 400.0
-        primaryStage.height = 260.0
+        primaryStage.height = 280.0
 
         primaryStage.centerOnScreen()
     }
