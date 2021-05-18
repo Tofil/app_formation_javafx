@@ -79,7 +79,7 @@ class GraphePrerequisView : Fragment("Graphe des prérequis") {
                 node.setAttribute("ui.class", "valide")
             }
         }
-        setPossible()
+        //setPossible()
         setDepart()
     }
 
@@ -117,16 +117,17 @@ class GraphePrerequisView : Fragment("Graphe des prérequis") {
             println(ue.listeUePrereq.size)
             println(ue.code)
             val ueSuiviOuValide = selectedUes.find { ueSuivie -> ueSuivie.ue.code == ue.code }
-            var uePrerequisNonSuiviOuNonValide = false
+            var possible = true
             ue.listeUePrereq.forEach { uePrerequie ->
-                if (selectedUes.find { ueSuivi ->
-                        ((!ueSuivi.valide || !ueSuivi.enCour) || uePrerequie.equals(ueSuivi))
-                    } != null) {
-                    uePrerequisNonSuiviOuNonValide = true
+                val ueSuivie = selectedUes.find { ueSuivi -> uePrerequie.equals(ueSuivi) }
+                if ((ueSuivie != null && (ueSuivie.valide || ueSuivie.enCour))) {
+                    possible = false
                 }
             }
+            //val a = graph.getNode(ue.code)?.enteringEdges()?.anyMatch { t -> t.getAttribute("ui.class") == "possible" }
+            possible = possible && ueSuiviOuValide == null //&& !a!!
 
-            if (!uePrerequisNonSuiviOuNonValide && ueSuiviOuValide == null) {
+            if (possible) {
                 graph.getNode(ue.code)?.setAttribute("ui.class", "possible")
             }
         }
