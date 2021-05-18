@@ -21,5 +21,8 @@ class UE(code: String, nbCredit: Int=0,formation: Formation? = null, listeUePrer
     val listeUePrereqProperty = SimpleListProperty<UE>(listeUePrereq)
     var listeUePrereq by listeUePrereqProperty
 
+    override fun equals(other: Any?)
+            =other is UE
+            && code == other.code
 
 }

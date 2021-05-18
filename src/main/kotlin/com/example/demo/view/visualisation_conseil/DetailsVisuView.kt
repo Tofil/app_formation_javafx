@@ -5,6 +5,7 @@ import com.example.demo.controller.EtudiantController
 import com.example.demo.controller.MainController
 import com.example.demo.model.UE
 import com.example.demo.model.UESuivi
+import com.example.demo.view.graphs.GraphePrerequisView
 import javafx.beans.property.SimpleStringProperty
 import jfxtras.styles.jmetro.JMetro
 import jfxtras.styles.jmetro.Style
@@ -13,7 +14,7 @@ import tornadofx.*
 class DetailsVisuView : View("Visualisation et conseil") {
     private val ctrl: MainController by inject()
     private val etuCtrl: EtudiantController by inject()
-    private val  csvController: CSVController by inject()
+    private val csvController: CSVController by inject()
 
     private val ueSuivisValide = SortedFilteredList(ctrl.ueSuivis)
     private val ueSuivisEnCour = SortedFilteredList(ctrl.ueSuivis)
@@ -82,6 +83,11 @@ class DetailsVisuView : View("Visualisation et conseil") {
                         }
                     }
                 }
+                tab("Graphe de la Formation") {
+                    borderpane {
+                        top<GraphePrerequisView>()
+                    }
+                }
             }
         }
         minWidth = 700.0
@@ -99,20 +105,22 @@ class DetailsVisuView : View("Visualisation et conseil") {
         ueSuivisPrereq.predicate = { ue ->
             val uesEtu = ctrl.ueSuivis.filter { ueSuivi ->
                 etuCtrl.selectedEtu == ueSuivi.etu
-            }.map{ueSuivi->ueSuivi.ue}
+            }.map { ueSuivi -> ueSuivi.ue }
 
-            val uesEtuPreq = ctrl.ues.filter { ue-> ue.listeUePrereq!=null && ue.listeUePrereq.any(uesEtu::contains)}
+            val uesEtuPreq =
+                ctrl.ues.filter { ue -> ue.listeUePrereq != null && ue.listeUePrereq.any(uesEtu::contains) }
             uesEtuPreq.contains(ue) &&
-            (
-                    ue.formation == null || (
-                            ue.formation != null &&
-                                    (ue.formation.mention.contains(filterMention.value)) &&
-                                    (ue.formation.parcours.contains(filterParcours.value))
+                    (
+                            ue.formation == null || (
+                                    ue.formation != null &&
+                                            (ue.formation.mention.contains(filterMention.value)) &&
+                                            (ue.formation.parcours.contains(filterParcours.value))
+                                    )
                             )
-                    )
 
         }
     }
+
     override fun onBeforeShow() {
         super.onBeforeShow()
         val jMetro = JMetro(Style.LIGHT)

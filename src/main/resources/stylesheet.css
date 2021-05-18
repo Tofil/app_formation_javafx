@@ -1,0 +1,27 @@
+graph {
+    fill-color: grey;
+    text-mode: normal;
+
+    text-visibility-mode: normal;
+}
+
+node {
+    text-size: 15px;
+    size: 20px;
+    fill-color: blue;
+}
+node.suivie {
+    fill-color: blue;
+}
+node.valide {
+    fill-color: green;
+}
+node.possible {
+    fill-color: white;
+}
+node.plus {
+    fill-color: palevioletred;
+}
+node.impossible {
+    fill-color: darkred ;
+}
