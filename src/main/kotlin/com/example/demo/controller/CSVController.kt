@@ -13,107 +13,178 @@ import kotlinx.coroutines.runBlocking
 import tornadofx.Controller
 import tornadofx.alert
 import java.io.File
+import java.lang.Exception
 import kotlin.collections.listOf as listOf
 
+/**
+ * Controlleur d'intéraction lecture/ecriture avec les fichiers csv
+ *
+ */
 class CSVController : Controller() {
     private val mainCtrl: MainController by inject()
     private val fileList = listOf("\\formations.csv", "\\ues.csv", "\\etudiants.csv", "\\ueSuivis.csv")
     private var flagFhicherManquant: Boolean = false
 
+    /**
+     * Fonction de lecture csv
+     */
     fun csvReader() = runBlocking {
         for (filename in fileList){
-            val filePath = mainCtrl.folderPath.value + filename
-            if(File(filePath).exists()){
-                val job: Job = launch { com.github.doyaaaaaken.kotlincsv.dsl.csvReader().open(filePath) {
-                    println("Lecture de $filename")
-                    readAllAsSequence().forEach { row: List<String> -> //Read as Sequence
-                        println(row)
-                        itemFactory(filename, row, false)
-                    }
-                }
-                }
-                if (filename == fileList[1]){
-                    job.join()
-                    launch { com.github.doyaaaaaken.kotlincsv.dsl.csvReader().open(filePath) {
-                        println("Lecture de $filename")
-                        readAllAsSequence().forEach { row: List<String> ->
-                            println(row) //[a, b, c]
-                            itemFactory(filename, row, true)
+            try{
+                val filePath = mainCtrl.folderPath.value + filename
+                if (File(filePath).exists()) {
+                    val job: Job = launch {
+                        try{
+                            com.github.doyaaaaaken.kotlincsv.dsl.csvReader().open(filePath) {
+                                //println("Lecture de $filename")
+                                readAllAsSequence().forEach { row: List<String> -> //Read as Sequence
+                                    //println(row)
+                                    itemFactory(filename, row, false)
+                                }
+                            }
+                        }catch (e : com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException){
+                            alert(
+                                Alert.AlertType.ERROR,
+                                "Erreur : CSV Malformé",
+                                "Le fichier csv $filename semble mal formée, chaque ligne doit avoir le même nombre de séparateur"
+                            )
                         }
                     }
+                    if (filename == fileList[1]) {
+                        job.join()
+                        launch {
+                            try{
+                                com.github.doyaaaaaken.kotlincsv.dsl.csvReader().open(filePath) {
+                                    //println("Lecture de $filename")
+                                    readAllAsSequence().forEach { row: List<String> ->
+                                        //println(row) //[a, b, c]
+                                        itemFactory(filename, row, true)
+                                    }
+                                }
+                            }catch (e : com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException){
+                                alert(
+                                    Alert.AlertType.ERROR,
+                                    "Erreur : CSV Malformé",
+                                    "Le fichier csv $filename semble mal formée, chaque ligne doit avoir le même nombre de séparateur"
+                                )
+                            }
+                        }
                     }
+                } else {
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "Erreur : Fichier manquant",
+                        "Le fichier $filePath est introuvable"
+                    )
+                    flagFhicherManquant = true
                 }
-            }else{
+            }catch (e: Exception){
                 alert(
                     Alert.AlertType.ERROR,
-                    "Erreur : Fichier manquant",
-                    "Le fichier $filePath est introuvable"
+                    "Erreur : Exception",
+                    e.message
                 )
-                flagFhicherManquant = true
             }
         }
     }
 
+    /**
+     * Fonction de d'ecriture csv
+     */
     fun csvWriter() = runBlocking {
         for (filename in fileList){
-            val filePath = mainCtrl.folderPath.value + "\\test" + filename
+            val filePath = mainCtrl.folderPath.value + filename
             launch {
-                println("Ecriture de $filename")
-                val rows = ArrayList<ArrayList<String>>()
-                when (filename) {
-                    fileList[0] -> {
+                //println("Ecriture de $filename")
+                try{
+                    val rows = ArrayList<ArrayList<String>>()
+                    when (filename) {
+                        fileList[0] -> {
 
-                        for (formation in mainCtrl.formations){
-                            rows.add(arrayListOf(formation.mention,formation.parcours))
-                        }
-                    }
-                    fileList[1] -> {
-                        for (ue in mainCtrl.ues){
-                            val row = arrayListOf(ue.code,ue.nbCredits.toString(), getConcatFormation(ue.formation))
-                            for (uePrereq in ue.listeUePrereq){
-                                if (uePrereq != null){
-                                    row.add(uePrereq.code)
-                                }else{
-                                    row.add("")
-                                }
+                            for (formation in mainCtrl.formations) {
+                                rows.add(arrayListOf(formation.mention, formation.parcours))
                             }
-                            rows.add(row)
                         }
-
-                        val maxRowLenght = (rows.maxByOrNull { it.size })?.size
-                        for (row in rows){
-                            if (row.size < maxRowLenght!!){
-                                for (i in row.size until maxRowLenght){
-                                    row.add("")
+                        fileList[1] -> {
+                            for (ue in mainCtrl.ues) {
+                                val row =
+                                    arrayListOf(ue.code, ue.nbCredits.toString(), mainCtrl.getConcatFormation(ue.formation))
+                                for (uePrereq in ue.listeUePrereq) {
+                                    if (uePrereq != null) {
+                                        row.add(uePrereq.code)
+                                    } else {
+                                        row.add("")
+                                    }
                                 }
+                                rows.add(row)
                             }
 
+                            val maxRowLenght = (rows.maxByOrNull { it.size })?.size
+                            for (row in rows) {
+                                if (row.size < maxRowLenght!!) {
+                                    for (i in row.size until maxRowLenght) {
+                                        row.add("")
+                                    }
+                                }
+
+                            }
+                        }
+                        fileList[2] -> {
+                            for (etudiant in mainCtrl.etudiants) {
+                                rows.add(
+                                    arrayListOf(
+                                        etudiant.numero,
+                                        etudiant.nom,
+                                        etudiant.prenom,
+                                        mainCtrl.getConcatFormation(etudiant.formation)
+                                    )
+                                )
+                            }
+                        }
+                        fileList[3] -> {
+                            for (ueSuivi in mainCtrl.ueSuivis) {
+                                rows.add(
+                                    arrayListOf(
+                                        ueSuivi.ue.code,
+                                        ueSuivi.etu.numero,
+                                        ueSuivi.annee,
+                                        ueSuivi.valide.toString(),
+                                        ueSuivi.semestrePair.toString(),
+                                        ueSuivi.enCour.toString()
+                                    )
+                                )
+                            }
                         }
                     }
-                    fileList[2] -> {
-                        for (etudiant in mainCtrl.etudiants){
-                            rows.add(arrayListOf(etudiant.numero, etudiant.nom, etudiant.prenom, getConcatFormation(etudiant.formation)))
-                        }
-                    }
-                    fileList[3] -> {
-                        for (ueSuivi in mainCtrl.ueSuivis){
-                            rows.add(arrayListOf(ueSuivi.ue.code, ueSuivi.etu.numero, ueSuivi.annee, ueSuivi.valide.toString(), ueSuivi.semestrePair.toString(), ueSuivi.enCour.toString()))
-                        }
-                    }
+
+                    com.github.doyaaaaaken.kotlincsv.dsl.csvWriter().writeAll(rows, filePath)
+                }catch (e:Exception){
+                    alert(
+                        Alert.AlertType.ERROR,
+                        "Erreur : Exception",
+                        e.message
+                    )
                 }
-
-                com.github.doyaaaaaken.kotlincsv.dsl.csvWriter().writeAll(rows, filePath)
             }
         }
     }
 
+    /**
+     * Fabrique d'objets Formation, Etudiant, UE, UESuivi
+     *
+     * @param name nom du fichier qui est en train d'être lu
+     * @param list la liste de string de la ligne retournée par le csvReader
+     * @param postCharger mode post postCharger :
+     *      false (Prechargement) : on fabrique les objets ue uniquement avec leur code et nombre de crédit
+     *      true : on ajoute aux objets ue la formation rattachée et leurs ue prérequis
+     */
     private fun itemFactory(name : String, list : List<String>, postCharger : Boolean){
         if (postCharger){
             if(list.size > 2){
                 for (eu in mainCtrl.ues){
                     if (eu.code == list[0]){
 
-                        val forma = getFormation(list[2])
+                        val forma = mainCtrl.getFormation(list[2])
                         var debut = 2
                         val listeUePrereq : ObservableList<UE> = FXCollections.observableArrayList()
 
@@ -123,7 +194,7 @@ class CSVController : Controller() {
                         }
 
                         for (i in debut until list.size ){
-                            val uePrereq = getUE(list[i])
+                            val uePrereq = mainCtrl.getUE(list[i])
                             if (uePrereq != null )
                                 listeUePrereq.add(uePrereq)
                         }
@@ -142,11 +213,11 @@ class CSVController : Controller() {
                     mainCtrl.ues.add(UE(list[0], list[1].toInt())) //Prechargement
                 }
                 fileList[2] -> {
-                    mainCtrl.etudiants.add(Etudiant(list[0], list[1], list[2], getFormation(list[3])))
+                    mainCtrl.etudiants.add(Etudiant(list[0], list[1], list[2], mainCtrl.getFormation(list[3])))
                 }
                 fileList[3] -> {
-                    mainCtrl.ueSuivis.add(UESuivi(getUE(list[0]),
-                        getEtudiant(list[1]),
+                    mainCtrl.ueSuivis.add(UESuivi(mainCtrl.getUE(list[0]),
+                        mainCtrl.getEtudiant(list[1]),
                         list[2],
                         list[3] == "true",
                         list[4] == "true",
@@ -155,40 +226,5 @@ class CSVController : Controller() {
                 }
             }
         }
-    }
-
-    private fun getConcatFormation(formation: Formation?): String {
-        return if (formation != null) {
-            formation.mention + formation.parcours
-        } else {
-            ""
-        }
-    }
-
-    private fun getFormation(concat : String): Formation? {
-        for (formation in mainCtrl.formations){
-            if (concat == (formation.mention+formation.parcours)){
-                return formation
-            }
-        }
-        return null
-    }
-
-    private fun getUE(concat : String): UE? {
-        for (ue in mainCtrl.ues){
-            if (concat == ue.code){
-                return ue
-            }
-        }
-        return null
-    }
-
-    private fun getEtudiant(concat : String): Etudiant? {
-        for (etudiant in mainCtrl.etudiants){
-            if (concat == etudiant.numero){
-                return etudiant
-            }
-        }
-        return null
     }
 }

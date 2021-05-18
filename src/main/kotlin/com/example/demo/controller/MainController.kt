@@ -23,42 +23,74 @@ class MainController : Controller() {
 
     val csvHelper = CSVController()
 
+    /**
+     * Fonction d'initialisation de l'application, appelle la lecture de tous les csv et set le path entrer en préférence d'application
+     */
     fun initFromPath() {
-        //TODO: ImportCSV
         csvHelper.csvReader()
         pref.put("App_Formation_folderPath", folderPath.value)
-        /*
-        formations.addAll(
-            Formation("MIASH", "MIAGE"),
-            Formation("MIAGE", "MDS")
-        )
-
-        ues.addAll(
-            UE("UE27862", 3,formations[0]),
-            UE("UE89062", 2,formations[0]),
-            UE("UE24352", 6,formations[1]),
-            UE("UE13572", 8)
-        )
-        ues.addAll(
-            UE("UE243252", 6,formations[1], FXCollections.observableArrayList(ues[0])),
-            UE("UE244352", 6,formations[0], FXCollections.observableArrayList(ues[1]))
-        )
-        etudiants.addAll(
-            Etudiant("A1Z972", "ValJean", "Jean", formations[0]),
-            Etudiant("A7S987F", "Orliac", "Théophile", formations[0]),
-            Etudiant("68D5SQD", "Oliver", "John", formations[0])
-        )
-
-        ueSuivis.addAll(
-            UESuivi(ues[0],etudiants[0], "2020", "Oui", "Oui", "Non"),
-            UESuivi(ues[1],etudiants[0], "2021", "Non", "Oui", "Oui"),
-            UESuivi(ues[1],etudiants[1], "2021", "Oui", "Non", "Non")
-        )*/
     }
 
+    /**
+     * Fonction de sélection du dossier contenant tous les csv utiliser par l'application
+     */
     fun setFolderPath(){
         folderPath.value = chooseDirectory("Select Target Directory")?.absolutePath
     }
 
+    /**
+     * Fonction de concaténation de la mention et du parcours d'une formation
+     * @param formation la formation à concaténer
+     * @return la chaine de caractère de la formation concaténé, si la formation passer en paramètre et null renvoie une chaine vide
+     */
+    fun getConcatFormation(formation: Formation?): String {
+        return if (formation != null) {
+            formation.mention + formation.parcours
+        } else {
+            ""
+        }
+    }
+
+    /**
+     * Fonction de recherche d'une formation par le string concaténé de la mention et du parcours de la formation
+     * @param concat string concaténé à rechercher
+     * @return la formation correspondante, si aucune formation ne correspond renvoie null
+     */
+    fun getFormation(concat : String): Formation? {
+        for (formation in formations){
+            if (concat == (formation.mention+formation.parcours)){
+                return formation
+            }
+        }
+        return null
+    }
+
+    /**
+     * Fonction de recherche d'une UE par le code d'UE
+     * @param code code de l'UE à rechercher
+     * @return l'UE correspondante, si aucune UE ne correspond renvoie null
+     */
+    fun getUE(code : String): UE? {
+        for (ue in ues){
+            if (code == ue.code){
+                return ue
+            }
+        }
+        return null
+    }
+
+    /**
+     * Fonction de recherche d'un Etudiant par le numero d'Etudiant
+     * @param numero code de l'UE à rechercher
+     * @return l'Etudiant correspondante, si aucune Etudiant ne correspond renvoie null
+     */
+    fun getEtudiant(numero : String): Etudiant? {
+        for (etudiant in etudiants){
+            if (numero == etudiant.numero){
+                return etudiant
+            }
+        }
+        return null
+    }
 
 }
