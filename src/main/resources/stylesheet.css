@@ -19,6 +19,9 @@ node.valide {
 node.possible {
     fill-color: white;
 }
+node.depart {
+    fill-color: orange;
+}
 node.plus {
     fill-color: palevioletred;
 }
